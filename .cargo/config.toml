@@ -1,11 +1,17 @@
 [build]
 target = ["avr-specs/avr-atmega2560.json", "avr-specs/avr-attiny85.json"]
 
-[target.'cfg(target_cpu = "atmega2560")']
+[target.avr-atmega2560]
 runner = "ravedude mega2560 -cb 57600"
 
-[target.'cfg(target_cpu = "attiny85")']
-runner = "ravedude trinket"
+[target.avr-attiny85]
+runner = "ravedude tiny85"
+rustflags = [
+"-C", "inline-threshold=275"]
+
+[target.xtensa-esp32-none-elf]
+runner = "espflash flash --monitor"
 
 [unstable]
 build-std = ["core"]
+multitarget = true
