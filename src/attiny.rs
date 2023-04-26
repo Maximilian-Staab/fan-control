@@ -8,17 +8,15 @@ use arduino_hal::hal::port::PB2;
 
 pub use arduino_hal::hal::prelude::*;
 
-use arduino_hal::hal::Adc;
-use arduino_hal::port::mode::Analog;
-use arduino_hal::port::Pin;
+use arduino_hal::{
+    hal::Adc,
+    port::{mode::Analog, Pin},
+};
 
-use mhal::tc0::tccr0b::CS0_A as Prescale;
-use mhal::TC0 as PwmCounter;
+use mhal::{tc0::tccr0b::CS0_A as Prescale, TC0 as PwmCounter};
 
 use fixed::types::I20F12;
 type IFix = I20F12;
-
-use az::Cast;
 
 use crate::commons::{
     clock_top_phase, interpolate_curve, Controller, FanCurve, PwmPhaseInit, SetDuty, Temp,
@@ -62,7 +60,7 @@ impl Controller for Board {
         let measurement: IFix = self.analog.analog_read(&mut self.adc).into();
         self.avg = IFix::from_num(0.8) * self.avg + IFix::from_num(0.2) * measurement;
         let temp = self.avg.temp();
-        let calc = PwmDevice::<PwmCounter>::curve(temp.cast());
+        let calc = PwmDevice::<PwmCounter>::curve(temp.to_num());
         self.pwm.set_duty(calc);
     }
 }

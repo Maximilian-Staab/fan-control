@@ -1,12 +1,12 @@
 [package]
-name = "fan-controll-rs"
+name = "fan-control-rs"
 version = "0.1.0"
 authors = ["Maximilian Staab <maximilian.staab@student.kit.edu>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [[bin]]
-name = "fan-controll-rs"
+name = "fan-control-rs"
 test = false
 bench = false
 
@@ -24,7 +24,6 @@ nb = "0.1.2"
 embedded-hal = "0.2.3"
 ufmt = "0.1.0"
 fixed = { version = "1.23.1", features = ["num-traits"]}
-az = "1.2.1"    # Needed for the cast from
 
 
 [target.avr-atmega2560.dependencies]
@@ -33,6 +32,7 @@ arduino-hal = { git = "https://github.com/rahix/avr-hal", rev = "4c9c44c314eb061
 ] }
 avr-device = { version = "0.5.1", features = ["atmega2560"] }
 avr-hal-generic = { git = "https://github.com/rahix/avr-hal", rev = "4c9c44c314eb061ee20556ef10d45dea36e75ee4" }
+# Only if you need floats and the steinhart-hart calculation for temperature
 num-traits = { version = "0.2.15", default-features = false, features = ["libm"] }
 
 
@@ -43,13 +43,6 @@ arduino-hal = { git = "https://github.com/rahix/avr-hal", rev = "4c9c44c314eb061
 avr-device = { version = "0.5.1", features = ["attiny85"] }
 avr-hal-generic = { git = "https://github.com/rahix/avr-hal", rev = "4c9c44c314eb061ee20556ef10d45dea36e75ee4" }
 fixed = { version = "1.23.1"}
-az = "1.2.1"
-
-
-[target.xtensa-esp32-none-elf.dependencies]
-hal = { package = "esp32-hal", version = "0.11.0" }
-esp-backtrace = { version = "0.6.0", features = ["esp32", "panic-handler", "exception-handler", "print-uart"] }
-esp-println       = { version = "0.4.0", features = ["esp32"] }
 
 
 # Configure the build for minimal size - AVRs have very little program memory
@@ -61,9 +54,10 @@ opt-level = "s"
 [profile.release]
 panic = "abort"
 codegen-units = 1
-#debug = true
 lto = true
-opt-level = "s"
+# Be carefull with `z`, it can lead to a compiler bug in some cases
+opt-level = "z"
 
+# Be carefull with `z`, it can lead to a compiler bug in some cases
 [profile.release.package."*"]
-opt-level = "s"
+opt-level = "z"
