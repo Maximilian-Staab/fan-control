@@ -4,9 +4,9 @@ macro_rules! best_prescaler {
         let cpu_f: u32 = $cf;
         let target_f: u32 = $tf;
 
-        #[cfg(feature = "phase_pwm")]
+        #[cfg(all(feature = "phase_pwm", not(feature = "simple_pwm")))]
         let divisor = 510;
-        #[cfg(feature = "simple_pwm")]
+        #[cfg(all(feature = "simple_pwm", not(feature = "phase_pwm")))]
         let divisor = 256;
 
         let approx_range = cpu_f / target_f / divisor;
@@ -27,9 +27,9 @@ macro_rules! best_prescaler_async {
         let cpu_f: u32 = $cf;
         let target_f: u32 = $tf;
 
-        #[cfg(feature = "phase_pwm")]
+        #[cfg(all(feature = "phase_pwm", not(feature = "simple_pwm")))]
         let divisor = 510;
-        #[cfg(feature = "simple_pwm")]
+        #[cfg(all(feature = "simple_pwm", not(feature = "phase_pwm")))]
         let divisor = 256;
 
         let approx_range = cpu_f / target_f / divisor;
