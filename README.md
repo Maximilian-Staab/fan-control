@@ -25,6 +25,25 @@ Alternatively, run
 avrdude -p t85 -cusbasp -P usb -U .\target\avr-attiny85\release\fan-controll-rs.elf
 ```
 
+### Compile
+
+#### Arduino Mega2560
+```shell
+cargo build --release --target avr-specs/avr-atmega2560.json --features pump,fan,phase_pwm,serial
+```
+#### Attiny85
+```shell
+cargo build --release --target avr-specs/avr-attiny85.json --features fan,phase_pwm
+cargo build --release --target avr-specs/avr-attiny85.json --features pump,phase_pwm
+```
+
+Use `pump` and `fan` to select the fan curve. 
+The `phase_pwm` and `simple_pwm` features can be used to select the type of pwm implementation.
+Specifics are board dependent. Simple will allow you to use a more granular control of the duty cycle, but
+my application doesn't need this amount of granularity.
+
+You can enable serial output by using `serial` on the Atmega. The statement won't have an effect on the Tiny.
+
 ## License
 Licensed under either of
 
