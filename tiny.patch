@@ -1,0 +1,44 @@
+diff --git a/ravedude/src/board.rs b/ravedude/src/board.rs
+index 2f21093..96b0955 100644
+--- a/ravedude/src/board.rs
++++ b/ravedude/src/board.rs
+@@ -20,6 +20,7 @@ pub fn get_board(board: &str) -> Option<Box<dyn Board>> {
+         "promicro" => Box::new(SparkFunProMicro),
+         "trinket-pro" => Box::new(TrinketPro),
+         "trinket" => Box::new(Trinket),
++        "tiny85" => Box::new(Tiny85),
+         "nano168" => Box::new(Nano168),
+         "duemilanove" => Box::new(ArduinoDuemilanove),
+         _ => return None,
+@@ -366,6 +367,31 @@ impl Board for Trinket {
+     }
+ }
+ 
++struct Tiny85;
++
++impl Board for Tiny85 {
++    fn display_name(&self) -> &str {
++        "Tiny85"
++    }
++
++    fn needs_reset(&self) -> Option<&str> {
++        Some("Reset the board by pressing the reset button once.")
++    }
++
++    fn avrdude_options(&self) -> avrdude::AvrdudeOptions {
++        avrdude::AvrdudeOptions {
++            programmer: "usbasp",
++            partno: "attiny85",
++            baudrate: None,
++            do_chip_erase: true,
++        }
++    }
++
++    fn guess_port(&self) -> Option<anyhow::Result<std::path::PathBuf>> {
++        None // The Tiny85 does not have USB-to-Serial.
++    }
++}
++
+ struct Nano168;
+ 
+ impl Board for Nano168 {
